@@ -1,6 +1,6 @@
 services:
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce:2.21.3
     container_name: portainer
     volumes:
       - /etc/localtime:/etc/localtime:ro
