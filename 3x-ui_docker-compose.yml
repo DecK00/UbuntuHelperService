@@ -1,0 +1,37 @@
+services:
+  3x-ui:
+    image: ghcr.io/mhsanaei/3x-ui:latest
+    container_name: 3x-ui
+    hostname: 3x.URL
+    volumes:
+      - ./db/:/etc/x-ui/
+      - ./cert/:/root/cert/
+    environment:
+      XRAY_VMESS_AEAD_FORCED: "false"
+    tty: true
+    networks:
+      proxy:
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.3x.entrypoints=http"
+      - "traefik.http.routers.3x.rule=Host(`3x.URL`)"
+      - "traefik.http.middlewares.3x-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.3x.middlewares=3x-https-redirect"
+      - "traefik.http.routers.3x-secure.entrypoints=https"
+      - "traefik.http.routers.3x-secure.rule=Host(`3x.URL`)"
+      - "traefik.http.routers.3x-secure.tls=true"
+      - "traefik.http.routers.3x-secure.service=3x"
+      - "traefik.http.services.3x.loadbalancer.server.port=2053"
+      - "traefik.docker.network=proxy"
+
+      - "traefik.tcp.routers.xui-proxy.entrypoints=https"
+      - "traefik.tcp.routers.xui-proxy.rule=HostSNI(`HOSTSNI`)"
+      - "traefik.tcp.routers.xui-proxy.tls=true"
+      - "traefik.tcp.routers.xui-proxy.tls.passthrough=true"
+      - "traefik.tcp.routers.xui-proxy.service=xui-proxy"
+      - "traefik.tcp.services.xui-proxy.loadbalancer.server.port=443"
+
+networks:
+  proxy:
+    external: true
