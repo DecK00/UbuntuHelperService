@@ -11,10 +11,6 @@ else
     echo "Загружаю переменные из .env..."
     source .env
 
-    # Создание хеша пароля
-    echo "Создаю хеш пароля для пользователя 'admin'..."
-    HASH_PASSWORD=$(htpasswd -bnB "admin" "$PASSWORD" | sed -e 's/\$/\$\$/g')
-
     echo "Обновляю список пакетов..."
     apt-get update
     echo "Обновляю установленные пакеты..."
@@ -37,6 +33,10 @@ else
     else
         echo "Директория /root/project/3x-ui уже существует."
     fi
+
+    # Создание хеша пароля
+    echo "Создаю хеш пароля для пользователя 'admin'..."
+    HASH_PASSWORD=$(htpasswd -bnB "admin" "$PASSWORD" | sed -e 's/\$/\$\$/g')
 
     echo "Настраиваю файл acme.json..."
     chmod u=rw,go= /root/project/traefik/acme.json
