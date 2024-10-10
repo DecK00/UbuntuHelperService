@@ -19,6 +19,8 @@ else
     apt-get update
     echo "Обновляю установленные пакеты..."
     apt-get upgrade -y
+    echo "Устанавливаю пакет apache2-utils..."
+    apt-get install apache2-utils -y
 
     echo "Загружаю скрипт установки Docker..."
     curl -fsSL https://get.docker.com -o get-docker.sh
@@ -26,12 +28,14 @@ else
     sh get-docker.sh
     echo "Удаляю скрипт установки Docker..."
     rm get-docker.sh
+    echo "Создаю сеть Docker с именем 'proxy'..."
+    docker network create proxy
 
-    if [ ! -d "/root/3x-ui" ]; then
+    if [ ! -d "/root/project/3x-ui" ]; then
         echo "Директория /root/3x-ui не существует. Клонирую репозиторий..."
         git clone https://github.com/MHSanaei/3x-ui
     else
-        echo "Директория /root/3x-ui уже существует."
+        echo "Директория /root/project/3x-ui уже существует."
     fi
 
     echo "Настраиваю файл acme.json..."
