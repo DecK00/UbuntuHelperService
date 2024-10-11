@@ -5,9 +5,6 @@ if [ -z "$BASH_VERSION" ]; then
     echo "Скрипт запущен из sh или другой оболочки."
     echo "Пожалуйста, запустите его через bash: 'bash main.sh'"
 else
-    echo "Скрипт запущен из bash."
-
-    # Загрузка переменных из .env
     echo "Загружаю переменные из .env..."
     source .env
 
@@ -27,13 +24,9 @@ else
     echo "Создаю сеть Docker с именем 'proxy'..."
     docker network create proxy
 
-    echo "Проверяю наличие директории /root/project/3x-ui..."
-    if [ ! -d "/root/project/3x-ui" ]; then
-        echo "Директория /root/3x-ui не найдена. Клонирую репозиторий..."
-        git clone https://github.com/MHSanaei/3x-ui
-    else
-        echo "Директория /root/project/3x-ui уже существует."
-    fi
+    # ------------------------------Установка Traefik
+    echo "Создаю хеш пароля для пользователя 'admin'..."
+    HASH_PASSWORD=$(htpasswd -bnB "admin" "$PASSWORD" | sed -e 's/\$/\$\$/g')
 
     echo "Проверяю наличие директории /root/project/traefik..."
     if [ ! -d "/root/project/traefik" ]; then
@@ -42,18 +35,6 @@ else
     else
         echo "Директория /root/project/traefik уже существует."
     fi
-
-    echo "Проверяю наличие директории /root/project/portainer..."
-    if [ ! -d "/root/project/portainer" ]; then
-        echo "Директория /root/project/portainer не найдена. Создаю директорию..."
-        mkdir -p /root/project/portainer
-    else
-        echo "Директория /root/project/portainer уже существует."
-    fi
-
-    # Создание хеша пароля
-    echo "Создаю хеш пароля для пользователя 'admin'..."
-    HASH_PASSWORD=$(htpasswd -bnB "admin" "$PASSWORD" | sed -e 's/\$/\$\$/g')
 
     echo "Копирую файлы конфигурации Traefik..."
     cp /root/project/template/traefik/acme.json /root/project/traefik/acme.json
@@ -73,6 +54,33 @@ else
     echo "Запускаю контейнеры Traefik..."
     docker compose -f /root/project/traefik/docker-compose.yml up -d
 
+    # ------------------------------Установка Dockge
+    echo "Проверяю наличие директории /root/project/dockge..."
+    if [ ! -d "/root/project/dockge" ]; then
+        echo "Директория /root/project/dockge не найдена. Создаю директорию..."
+        mkdir -p /root/project/dockge
+    else
+        echo "Директория /root/project/dockge уже существует."
+    fi
+
+    echo "Копирую файл docker-compose.yml для Dockge..."
+    cp /root/project/template/dockge/docker-compose.yml /root/project/dockge/docker-compose.yml
+
+    echo "Заменяю параметры в docker-compose.yml для Dockge..."
+    sed -i -e "s|URL|$URL|g" /root/project/dockge/docker-compose.yml
+
+    echo "Запускаю контейнеры Dockge..."
+    docker compose -f /root/project/dockge/docker-compose.yml up -d
+
+    # ------------------------------Установка Portainer
+    echo "Проверяю наличие директории /root/project/portainer..."
+    if [ ! -d "/root/project/portainer" ]; then
+        echo "Директория /root/project/portainer не найдена. Создаю директорию..."
+        mkdir -p /root/project/portainer
+    else
+        echo "Директория /root/project/portainer уже существует."
+    fi
+
     echo "Копирую файл docker-compose.yml для Portainer..."
     cp /root/project/template/portainer/docker-compose.yml /root/project/portainer/docker-compose.yml
 
@@ -81,6 +89,15 @@ else
 
     echo "Запускаю контейнеры Portainer..."
     docker compose -f /root/project/portainer/docker-compose.yml up -d
+
+    # ------------------------------Установка Portainer
+    echo "Проверяю наличие директории /root/project/3x-ui..."
+    if [ ! -d "/root/project/3x-ui" ]; then
+        echo "Директория /root/3x-ui не найдена. Клонирую репозиторий..."
+        git clone https://github.com/MHSanaei/3x-ui
+    else
+        echo "Директория /root/project/3x-ui уже существует."
+    fi
 
     echo "Копирую файл docker-compose.yml для 3x-ui..."
     cp /root/project/template/3x-ui/docker-compose.yml /root/project/3x-ui/docker-compose.yml
