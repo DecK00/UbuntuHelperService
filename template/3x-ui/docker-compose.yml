@@ -14,6 +14,7 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
+
       - "traefik.http.routers.3x.entrypoints=http"
       - "traefik.http.routers.3x.rule=Host(`3x.URL`)"
       - "traefik.http.middlewares.3x-https-redirect.redirectscheme.scheme=https"
@@ -23,14 +24,26 @@ services:
       - "traefik.http.routers.3x-secure.tls=true"
       - "traefik.http.routers.3x-secure.service=3x"
       - "traefik.http.services.3x.loadbalancer.server.port=2053"
-      - "traefik.docker.network=proxy"
+
+      - "traefik.http.routers.3x-sub.rule=Host(`3x.URL`) && PathPrefix(`/sub`)"
+      - "traefik.http.middlewares.3x-sub-mw-strip.stripprefix.prefixes=/sub"
+      - "traefik.http.middlewares.3x-sub-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.3x-sub.middlewares=3x-sub-https-redirect"
+      - "traefik.http.routers.3x-sub-secure.entrypoints=https"
+      - "traefik.http.routers.3x-sub-secure.rule=Host(`3x.URL`) && PathPrefix(`/sub`)"
+      - "traefik.http.middlewares.3x-sub-secure-mw-strip.stripprefix.prefixes=/sub"
+      - "traefik.http.routers.3x-sub-secure.tls=true"
+      - "traefik.http.routers.3x-sub-secure.service=3x-sub"
+      - "traefik.http.services.3x-sub.loadbalancer.server.port=2096"
 
       - "traefik.tcp.routers.xui-proxy.entrypoints=https"
-      - "traefik.tcp.routers.xui-proxy.rule=HostSNI(`HOSTSNI`)"
+      - "traefik.tcp.routers.xui-proxy.rule=HostSNI(`HOST_SNI`)"
       - "traefik.tcp.routers.xui-proxy.tls=true"
       - "traefik.tcp.routers.xui-proxy.tls.passthrough=true"
       - "traefik.tcp.routers.xui-proxy.service=xui-proxy"
       - "traefik.tcp.services.xui-proxy.loadbalancer.server.port=443"
+
+      - "traefik.docker.network=proxy"
 
 networks:
   proxy:
