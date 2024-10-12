@@ -72,6 +72,25 @@ else
     echo "Запускаю контейнеры Dockge..."
     docker compose -f /root/project/dockge/docker-compose.yml up -d
 
+     # ------------------------------Установка Watchtower
+    echo "Проверяю наличие директории /root/project/Watchtower..."
+    if [ ! -d "/root/project/watchtower" ]; then
+        echo "Директория /root/project/watchtower не найдена. Создаю директорию..."
+        mkdir -p /root/project/watchtower
+    else
+        echo "Директория /root/project/watchtower уже существует."
+    fi
+
+    echo "Копирую файл docker-compose.yml для Watchtower..."
+    cp /root/project/template/watchtower/docker-compose.yml /root/project/watchtower/docker-compose.yml
+
+    echo "Заменяю параметры в docker-compose.yml для Watchtower..."
+    sed -i -e "s|TG_BOT_TOKEN|$TG_BOT_TOKEN|g" /root/project/watchtower/docker-compose.yml
+    sed -i -e "s|TG_CHANNEL_WATCHTOWER|$TG_CHANNEL_WATCHTOWER|g" /root/project/watchtower/docker-compose.yml
+
+    echo "Запускаю контейнеры Watchtower..."
+    docker compose -f /root/project/watchtower/docker-compose.yml up -d
+
     # ------------------------------Установка Portainer
     echo "Проверяю наличие директории /root/project/portainer..."
     if [ ! -d "/root/project/portainer" ]; then

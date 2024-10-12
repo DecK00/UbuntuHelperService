@@ -1,0 +1,15 @@
+services:
+  watchtower:
+    image: containrrr/watchtower:1.7.1
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    environment:
+      TZ: Europe/Moscow
+      WATCHTOWER_LIFECYCLE_HOOKS: true
+      WATCHTOWER_NOTIFICATIONS: shoutrrr
+      WATCHTOWER_NOTIFICATION_URL: telegram://TG_BOT_TOKEN@telegram/?channels=TG_CHANNEL_WATCHTOWER
+      WATCHTOWER_DEBUG: true
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_SCHEDULE: 0 0 23 * * 0
