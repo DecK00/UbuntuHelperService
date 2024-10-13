@@ -10,7 +10,6 @@ services:
     networks:
       proxy:
     labels:
-      - "org.label-schema.group=monitoring"
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.entrypoints=http"
       - "traefik.http.routers.portainer.rule=Host(`portainer.URL`)"
