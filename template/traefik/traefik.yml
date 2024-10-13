@@ -25,7 +25,7 @@ providers:
 certificatesResolvers:
   cloudflare:
     acme:
-      email: anton.erykov@gmail.com
+      email: CF_EMAIL
       storage: acme.json
       dnsChallenge:
         provider: cloudflare

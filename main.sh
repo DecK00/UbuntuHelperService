@@ -50,6 +50,7 @@ else
     sed -i -e "s|URL|$URL|g" /root/project/traefik/docker-compose.yml
     sed -i -e "s|CF_EMAIL|$CF_EMAIL|g" /root/project/traefik/docker-compose.yml
     sed -i -e "s|CF_TOKEN|$CF_TOKEN|g" /root/project/traefik/docker-compose.yml
+    sed -i -e "s|CF_EMAIL|$CF_EMAIL|g" /root/project/traefik/traefik.yml
 
     echo "Запускаю контейнеры Traefik..."
     docker compose -f /root/project/traefik/docker-compose.yml up -d
