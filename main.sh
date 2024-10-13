@@ -42,11 +42,8 @@ install_traefik() {
         echo "Директория /root/project/traefik уже существует."
     fi
 
-    echo "Копирую файлы конфигурации Traefik..."
-    cp /root/project/template/traefik/acme.json /root/project/traefik/acme.json
-    cp /root/project/template/traefik/config.yml /root/project/traefik/config.yml
-    cp /root/project/template/traefik/docker-compose.yml /root/project/traefik/docker-compose.yml
-    cp /root/project/template/traefik/traefik.yml /root/project/traefik/traefik.yml
+    echo "Копирую файлы для Traefik..."
+    cp -r /root/project/template/traefik/. /root/project/traefik
 
     echo "Настраиваю файл acme.json для Traefik..."
     chmod u=rw,go= /root/project/traefik/acme.json  # Устанавливаем права доступа к acme.json
@@ -58,7 +55,7 @@ install_traefik() {
     sed -i -e "s|CF_TOKEN|$CF_TOKEN|g" /root/project/traefik/docker-compose.yml
     sed -i -e "s|CF_EMAIL|$CF_EMAIL|g" /root/project/traefik/traefik.yml
 
-    echo "Запускаю контейнеры Traefik..."
+    echo "Запускаю контейнер Traefik..."
     docker compose -f /root/project/traefik/docker-compose.yml up -d  # Запуск контейнеров Traefik
 }
 
@@ -72,13 +69,13 @@ install_dockge() {
         echo "Директория /root/project/dockge уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для Dockge..."
-    cp /root/project/template/dockge/docker-compose.yml /root/project/dockge/docker-compose.yml
+    echo "Копирую файлы для Dockge..."
+    cp -r /root/project/template/dockge/. /root/project/dockge
 
     echo "Заменяю параметры в docker-compose.yml для Dockge..."
     sed -i -e "s|URL|$URL|g" /root/project/dockge/docker-compose.yml
 
-    echo "Запускаю контейнеры Dockge..."
+    echo "Запускаю контейнер Dockge..."
     docker compose -f /root/project/dockge/docker-compose.yml up -d  # Запуск контейнеров Dockge
 }
 
@@ -92,13 +89,13 @@ install_portainer() {
         echo "Директория /root/project/portainer уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для Portainer..."
-    cp /root/project/template/portainer/docker-compose.yml /root/project/portainer/docker-compose.yml
+    echo "Копирую файлы для Portainer..."
+    cp -r /root/project/template/portainer/. /root/project/portainer
 
     echo "Заменяю параметры в docker-compose.yml для Portainer..."
     sed -i -e "s|URL|$URL|g" /root/project/portainer/docker-compose.yml
 
-    echo "Запускаю контейнеры Portainer..."
+    echo "Запускаю контейнер Portainer..."
     docker compose -f /root/project/portainer/docker-compose.yml up -d  # Запуск контейнеров Portainer
 }
 
@@ -112,14 +109,14 @@ install_watchtower() {
         echo "Директория /root/project/watchtower уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для Watchtower..."
-    cp /root/project/template/watchtower/docker-compose.yml /root/project/watchtower/docker-compose.yml
+    echo "Копирую файлы для Watchtower..."
+    cp -r /root/project/template/watchtower/. /root/project/watchtower
 
     echo "Заменяю параметры в docker-compose.yml для Watchtower..."
     sed -i -e "s|TG_BOT_TOKEN|$TG_BOT_TOKEN|g" /root/project/watchtower/docker-compose.yml
     sed -i -e "s|TG_CHANNEL_WATCHTOWER|$TG_CHANNEL_WATCHTOWER|g" /root/project/watchtower/docker-compose.yml
 
-    echo "Запускаю контейнеры Watchtower..."
+    echo "Запускаю контейнер Watchtower..."
     docker compose -f /root/project/watchtower/docker-compose.yml up -d  # Запуск контейнеров Watchtower
 }
 
@@ -142,14 +139,14 @@ install_3x_ui() {
         echo "Директория /root/project/3x-ui уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для 3x-ui..."
-    cp /root/project/template/3x-ui/docker-compose.yml /root/project/3x-ui/docker-compose.yml
+    echo "Копирую файлы для 3x-ui..."
+    cp -r /root/project/template/3x-ui/. /root/project/3x-ui
 
     echo "Заменяю параметры в docker-compose.yml для 3x-ui..."
     sed -i -e "s|URL|$URL|g" /root/project/3x-ui/docker-compose.yml
     sed -i -e "s|HOST_SNI|$HOST_SNI|g" /root/project/3x-ui/docker-compose.yml
 
-    echo "Запускаю контейнеры 3x-ui..."
+    echo "Запускаю контейнер 3x-ui..."
     docker compose -f /root/project/3x-ui/docker-compose.yml up -d  # Запуск контейнеров 3x-ui
 }
 
@@ -163,18 +160,23 @@ install_grafana() {
         echo "Директория /root/project/grafana уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для Grafana..."
-    cp /root/project/template/grafana/docker-compose.yml /root/project/grafana/docker-compose.yml
+    echo "Копирую файлы для Grafana..."
+    cp -r /root/project/template/grafana/. /root/project/grafana
 
     echo "Заменяю параметры в docker-compose.yml для Grafana..."
     sed -i -e "s|URL|$URL|g" /root/project/grafana/docker-compose.yml
+    sed -i -e "s|USER_GRAFANA|$USER_GRAFANA|g" /root/project/grafana/docker-compose.yml
+    sed -i -e "s|PASSWORD_GRAFANA|$PASSWORD_GRAFANA|g" /root/project/grafana/docker-compose.yml
 
-    echo "Запускаю контейнеры Grafana..."
+    echo "Запускаю контейнер Grafana..."
     docker compose -f /root/project/grafana/docker-compose.yml up -d  # Запуск контейнеров Grafana
 }
 
 # Функция для установки Prometheus
 install_prometheus() {
+    echo "Создаю хеш пароля для пользователя 'admin'..."
+    HASH_PASSWORD_PROMETHEUS=$(htpasswd -bnB "admin" "$PASSWORD_PROMETHEUS" | sed -e 's/\$/\$\$/g')
+
     echo "Проверяю наличие директории /root/project/prometheus..."
     if [ ! -d "/root/project/prometheus" ]; then
         echo "Директория /root/project/prometheus не найдена. Создаю директорию..."
@@ -183,13 +185,14 @@ install_prometheus() {
         echo "Директория /root/project/prometheus уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для Prometheus..."
-    cp /root/project/template/prometheus/docker-compose.yml /root/project/prometheus/docker-compose.yml
+    echo "Копирую файлы для Prometheus..."
+    cp -r /root/project/template/prometheus/. /root/project/prometheus
 
     echo "Заменяю параметры в docker-compose.yml для Prometheus..."
+    sed -i -e "s|PASSWORD_PROMETHEUS|$HASH_PASSWORD_PROMETHEUS|g" /root/project/prometheus/docker-compose.yml
     sed -i -e "s|URL|$URL|g" /root/project/prometheus/docker-compose.yml
 
-    echo "Запускаю контейнеры Prometheus..."
+    echo "Запускаю контейнер Prometheus..."
     docker compose -f /root/project/prometheus/docker-compose.yml up -d  # Запуск контейнеров Prometheus
 }
 
@@ -203,13 +206,10 @@ install_nodeexporter() {
         echo "Директория /root/project/nodeexporter уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для Node Exporter..."
-    cp /root/project/template/nodeexporter/docker-compose.yml /root/project/nodeexporter/docker-compose.yml
+    echo "Копирую файлы для Nodeexporter..."
+    cp -r /root/project/template/nodeexporter/. /root/project/nodeexporter
 
-    echo "Заменяю параметры в docker-compose.yml для Node Exporter..."
-    sed -i -e "s|URL|$URL|g" /root/project/nodeexporter/docker-compose.yml
-
-    echo "Запускаю контейнеры Node Exporter..."
+    echo "Запускаю контейнер Nodeexporter..."
     docker compose -f /root/project/nodeexporter/docker-compose.yml up -d  # Запуск контейнеров Node Exporter
 }
 
@@ -223,13 +223,10 @@ install_cadvisor() {
         echo "Директория /root/project/cadvisor уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для Cadvisor..."
-    cp /root/project/template/cadvisor/docker-compose.yml /root/project/cadvisor/docker-compose.yml
+    echo "Копирую файлы для Cadvisor..."
+    cp -r /root/project/template/cadvisor/. /root/project/cadvisor
 
-    echo "Заменяю параметры в docker-compose.yml для Cadvisor..."
-    sed -i -e "s|URL|$URL|g" /root/project/cadvisor/docker-compose.yml
-
-    echo "Запускаю контейнеры Cadvisor..."
+    echo "Запускаю контейнер Cadvisor..."
     docker compose -f /root/project/cadvisor/docker-compose.yml up -d  # Запуск контейнеров Cadvisor
 }
 
@@ -238,18 +235,15 @@ install_pushgateway() {
     echo "Проверяю наличие директории /root/project/pushgateway..."
     if [ ! -d "/root/project/pushgateway" ]; then
         echo "Директория /root/project/pushgateway не найдена. Создаю директорию..."
-        mkdir -p /root/project/pushgateway  # Создаём директорию для Pushgateway
+        mkdir -p /root/project/pushgateway
     else
         echo "Директория /root/project/pushgateway уже существует."
     fi
 
-    echo "Копирую файл docker-compose.yml для Pushgateway..."
-    cp /root/project/template/pushgateway/docker-compose.yml /root/project/pushgateway/docker-compose.yml
+    echo "Копирую файлы для Pushgateway..."
+    cp -r /root/project/template/pushgateway/. /root/project/pushgateway
 
-    echo "Заменяю параметры в docker-compose.yml для Pushgateway..."
-    sed -i -e "s|URL|$URL|g" /root/project/pushgateway/docker-compose.yml
-
-    echo "Запускаю контейнеры Pushgateway..."
+    echo "Запускаю контейнер Pushgateway..."
     docker compose -f /root/project/pushgateway/docker-compose.yml up -d  # Запуск контейнеров Pushgateway
 }
 
