@@ -1,0 +1,14 @@
+services:
+  pushgateway:
+      image: prom/pushgateway:v1.10.0
+      container_name: pushgateway
+      restart: unless-stopped
+      networks:
+        proxy:
+      labels:
+        - "org.label-schema.group=monitoring"
+        - "traefik.enable=true"
+        - "traefik.docker.network=proxy"
+networks:
+  proxy:
+    external: true

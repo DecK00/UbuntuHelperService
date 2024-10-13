@@ -197,4 +197,19 @@ else
     echo "Запускаю контейнеры Cadvisor..."
     docker compose -f /root/project/cadvisor/docker-compose.yml up -d
 
+    # ------------------------------Установка Pushgateway
+    echo "Проверяю наличие директории /root/project/pushgateway..."
+    if [ ! -d "/root/project/pushgateway" ]; then
+        echo "Директория /root/project/pushgateway не найдена. Создаю директорию..."
+        mkdir -p /root/project/pushgateway
+    else
+        echo "Директория /root/project/pushgateway уже существует."
+    fi
+
+    echo "Копирую файл docker-compose.yml для Pushgateway..."
+    cp -r /root/project/template/pushgateway/. /root/project/pushgateway
+
+    echo "Запускаю контейнеры Pushgateway..."
+    docker compose -f /root/project/pushgateway/docker-compose.yml up -d
+
 fi
