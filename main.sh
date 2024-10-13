@@ -151,6 +151,9 @@ else
     docker compose -f /root/project/grafana/docker-compose.yml up -d
 
     # ------------------------------Установка Prometheus
+    echo "Создаю хеш пароля для пользователя 'admin'..."
+    HASH_PASSWORD_PROMETHEUS=$(htpasswd -bnB "admin" "$PASSWORD_PROMETHEUS" | sed -e 's/\$/\$\$/g')
+
     echo "Проверяю наличие директории /root/project/prometheus..."
     if [ ! -d "/root/project/prometheus" ]; then
         echo "Директория /root/project/prometheus не найдена. Создаю директорию..."
@@ -163,6 +166,7 @@ else
     cp -r /root/project/template/prometheus/. /root/project/prometheus
 
     echo "Заменяю параметры в docker-compose.yml для Prometheus..."
+    sed -i -e "s|PASSWORD_PROMETHEUS|$HASH_PASSWORD_PROMETHEUS|g" /root/project/prometheus/docker-compose.yml
     sed -i -e "s|URL|$URL|g" /root/project/prometheus/docker-compose.yml
 
     echo "Запускаю контейнеры Prometheus..."
