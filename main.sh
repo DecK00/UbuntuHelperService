@@ -26,7 +26,7 @@ else
 
     # ------------------------------Установка Traefik
     echo "Создаю хеш пароля для пользователя 'admin'..."
-    HASH_PASSWORD=$(htpasswd -bnB "admin" "$PASSWORD" | sed -e 's/\$/\$\$/g')
+    HASH_PASSWORD_TRAEFIK=$(htpasswd -bnB "admin" "$PASSWORD_TRAEFIK" | sed -e 's/\$/\$\$/g')
 
     echo "Проверяю наличие директории /root/project/traefik..."
     if [ ! -d "/root/project/traefik" ]; then
@@ -46,7 +46,7 @@ else
     chmod u=rw,go= /root/project/traefik/acme.json
 
     echo "Заменяю параметры в docker-compose.yml для Traefik..."
-    sed -i -e "s|PASS|$HASH_PASSWORD|g" /root/project/traefik/docker-compose.yml
+    sed -i -e "s|PASSWORD_TRAEFIK|$HASH_PASSWORD_TRAEFIK|g" /root/project/traefik/docker-compose.yml
     sed -i -e "s|URL|$URL|g" /root/project/traefik/docker-compose.yml
     sed -i -e "s|CF_EMAIL|$CF_EMAIL|g" /root/project/traefik/docker-compose.yml
     sed -i -e "s|CF_TOKEN|$CF_TOKEN|g" /root/project/traefik/docker-compose.yml
