@@ -149,4 +149,22 @@ else
     echo "Запускаю контейнеры Grafana..."
     docker compose -f /root/project/grafana/docker-compose.yml up -d
 
+    # ------------------------------Установка Prometheus
+    echo "Проверяю наличие директории /root/project/prometheus..."
+    if [ ! -d "/root/project/prometheus" ]; then
+        echo "Директория /root/project/prometheus не найдена. Создаю директорию..."
+        mkdir -p /root/project/prometheus
+    else
+        echo "Директория /root/project/prometheus уже существует."
+    fi
+
+    echo "Копирую файл docker-compose.yml для Prometheus..."
+    cp -r /root/project/template/prometheus/. /root/project/prometheus
+
+    echo "Заменяю параметры в docker-compose.yml для Prometheus..."
+    sed -i -e "s|URL|$URL|g" /root/project/prometheus/docker-compose.yml
+
+    echo "Запускаю контейнеры Prometheus..."
+    docker compose -f /root/project/prometheus/docker-compose.yml up -d
+
 fi

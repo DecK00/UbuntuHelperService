@@ -1,0 +1,35 @@
+services:
+  prometheus:
+      image: prom/prometheus:v2.54.1
+      container_name: prometheus
+      volumes:
+        - ./:/etc/prometheus
+        - prometheus_data:/prometheus
+      command:
+        - '--config.file=/etc/prometheus/prometheus.yml'
+        - '--storage.tsdb.path=/prometheus'
+        - '--web.console.libraries=/etc/prometheus/console_libraries'
+        - '--web.console.templates=/etc/prometheus/consoles'
+        - '--storage.tsdb.retention.time=200h'
+        - '--web.enable-lifecycle'
+
+      restart: unless-stopped
+      networks:
+        proxy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.prometheus.entrypoints=http"
+        - "traefik.http.routers.prometheus.rule=Host(`prometheus.URL`)"
+        - "traefik.http.middlewares.prometheus-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.prometheus.middlewares=prometheus-https-redirect"
+        - "traefik.http.routers.prometheus-secure.entrypoints=https"
+        - "traefik.http.routers.prometheus-secure.rule=Host(`prometheus.URL`)"
+        - "traefik.http.routers.prometheus-secure.tls=true"
+        - "traefik.http.routers.prometheus-secure.service=prometheus"
+        - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+        - "traefik.docker.network=proxy"
+networks:
+  proxy:
+    external: true
+volumes:
+    prometheus_data: {}
