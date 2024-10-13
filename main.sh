@@ -167,4 +167,19 @@ else
     echo "Запускаю контейнеры Prometheus..."
     docker compose -f /root/project/prometheus/docker-compose.yml up -d
 
+    # ------------------------------Установка Nodeexporter
+    echo "Проверяю наличие директории /root/project/nodeexporter..."
+    if [ ! -d "/root/project/nodeexporter" ]; then
+        echo "Директория /root/project/nodeexporter не найдена. Создаю директорию..."
+        mkdir -p /root/project/nodeexporter
+    else
+        echo "Директория /root/project/nodeexporter уже существует."
+    fi
+
+    echo "Копирую файл docker-compose.yml для Nodeexporter..."
+    cp -r /root/project/template/nodeexporter/. /root/project/nodeexporter
+
+    echo "Запускаю контейнеры Nodeexporter..."
+    docker compose -f /root/project/nodeexporter/docker-compose.yml up -d
+
 fi
