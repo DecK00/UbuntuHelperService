@@ -15,6 +15,7 @@ services:
         networks:
           proxy:
         labels:
+          - "org.label-schema.group=monitoring"
           - "traefik.enable=true"
           - "traefik.docker.network=proxy"
 networks:
