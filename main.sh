@@ -127,4 +127,26 @@ else
 
     echo "Запускаю контейнеры 3x-ui..."
     docker compose -f /root/project/3x-ui/docker-compose.yml up -d
+
+
+    # ------------------------------Установка Grafana
+    echo "Проверяю наличие директории /root/project/grafana..."
+    if [ ! -d "/root/project/grafana" ]; then
+        echo "Директория /root/project/grafana не найдена. Создаю директорию..."
+        mkdir -p /root/project/grafana
+    else
+        echo "Директория /root/project/grafana уже существует."
+    fi
+
+    echo "Копирую файл docker-compose.yml для Grafana..."
+    cp -r /root/project/template/grafana/. /root/project/grafana
+
+    echo "Заменяю параметры в docker-compose.yml для Grafana..."
+    sed -i -e "s|URL|$URL|g" /root/project/grafana/docker-compose.yml
+    sed -i -e "s|USER_GRAFANA|$USER_GRAFANA|g" /root/project/grafana/docker-compose.yml
+    sed -i -e "s|PASSWORD_GRAFANA|$PASSWORD_GRAFANA|g" /root/project/grafana/docker-compose.yml
+
+    echo "Запускаю контейнеры Grafana..."
+    docker compose -f /root/project/grafana/docker-compose.yml up -d
+
 fi
