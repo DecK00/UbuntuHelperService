@@ -4,8 +4,8 @@ services:
       container_name: grafana
       volumes:
         - grafana_data:/var/lib/grafana
-        - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
-        - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+        - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards
+        - ./provisioning/datasources:/etc/grafana/provisioning/datasources
       environment:
         - GF_SECURITY_ADMIN_USER=USER_GRAFANA
         - GF_SECURITY_ADMIN_PASSWORD=PASSWORD_GRAFANA
