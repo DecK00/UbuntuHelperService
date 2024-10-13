@@ -182,4 +182,19 @@ else
     echo "Запускаю контейнеры Nodeexporter..."
     docker compose -f /root/project/nodeexporter/docker-compose.yml up -d
 
+    # ------------------------------Установка Cadvisor
+    echo "Проверяю наличие директории /root/project/cadvisor..."
+    if [ ! -d "/root/project/cadvisor" ]; then
+        echo "Директория /root/project/cadvisor не найдена. Создаю директорию..."
+        mkdir -p /root/project/cadvisor
+    else
+        echo "Директория /root/project/cadvisor уже существует."
+    fi
+
+    echo "Копирую файл docker-compose.yml для Cadvisor..."
+    cp -r /root/project/template/cadvisor/. /root/project/cadvisor
+
+    echo "Запускаю контейнеры Cadvisor..."
+    docker compose -f /root/project/cadvisor/docker-compose.yml up -d
+
 fi
