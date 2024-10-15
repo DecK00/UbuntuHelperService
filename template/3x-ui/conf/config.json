@@ -1,34 +1,52 @@
 {
-  "api": {
-    "services": [
-      "HandlerService",
-      "LoggerService",
-      "StatsService"
-    ],
-    "tag": "api"
+  "log": {
+    "access": "none",
+    "dnsLog": false,
+    "error": "",
+    "loglevel": "warning",
+    "maskAddress": ""
   },
-  "burstObservatory": null,
+  "routing": {
+    "domainStrategy": "AsIs",
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": [
+          "api"
+        ],
+        "outboundTag": "api"
+      },
+      {
+        "type": "field",
+        "outboundTag": "blocked",
+        "ip": [
+          "geoip:private"
+        ]
+      },
+      {
+        "type": "field",
+        "outboundTag": "blocked",
+        "protocol": [
+          "bittorrent"
+        ]
+      }
+    ]
+  },
   "dns": null,
-  "fakedns": null,
   "inbounds": [
     {
-      "allocate": null,
       "listen": "127.0.0.1",
       "port": 62789,
       "protocol": "dokodemo-door",
       "settings": {
         "address": "127.0.0.1"
       },
-      "sniffing": null,
       "streamSettings": null,
-      "tag": "api"
+      "tag": "api",
+      "sniffing": null,
+      "allocate": null
     },
     {
-      "allocate": {
-        "concurrency": 3,
-        "refresh": 5,
-        "strategy": "always"
-      },
       "listen": null,
       "port": 443,
       "protocol": "vless",
@@ -37,22 +55,11 @@
           {
             "email": "default",
             "flow": "xtls-rprx-vision",
-            "id": "6e23c0b5-54ed-4266-905e-f780795dab18"
+            "id": "f014a263-7e33-414a-9545-085be1220cd1"
           }
         ],
         "decryption": "none",
         "fallbacks": []
-      },
-      "sniffing": {
-        "destOverride": [
-          "http",
-          "tls",
-          "quic",
-          "fakedns"
-        ],
-        "enabled": false,
-        "metadataOnly": false,
-        "routeOnly": false
       },
       "streamSettings": {
         "network": "tcp",
@@ -61,19 +68,19 @@
           "maxClient": "",
           "maxTimediff": 0,
           "minClient": "",
-          "privateKey": "QM_dC2fq89WGEyGnDNH68nLe40Uf0uNQScru0koh23Q",
+          "privateKey": "kE9-Bksw-zLlBqwnvLF2Chy95_CEIkEczq055AUDqEU",
           "serverNames": [
             "yahoo.com"
           ],
           "shortIds": [
-            "fd206d2be39dacc2",
-            "78e64dcc5c1a",
-            "3a0b34",
-            "1c44",
-            "4fbc0221d2",
-            "608b279395a0f0",
-            "c7d8abe4",
-            "36"
+            "76efdd4a27a27f",
+            "ef",
+            "c3f588",
+            "6a6d5a58e05e",
+            "7c83503c",
+            "45d6c297d7901748",
+            "bd8d943809",
+            "5e54"
           ],
           "show": false,
           "xver": 0
@@ -86,31 +93,40 @@
           }
         }
       },
-      "tag": "inbound-443"
+      "tag": "inbound-443",
+      "sniffing": {
+        "enabled": false,
+        "destOverride": [
+          "http",
+          "tls",
+          "quic",
+          "fakedns"
+        ],
+        "metadataOnly": false,
+        "routeOnly": false
+      },
+      "allocate": {
+        "strategy": "always",
+        "refresh": 5,
+        "concurrency": 3
+      }
     }
   ],
-  "log": {
-    "access": "none",
-    "dnsLog": false,
-    "error": "",
-    "loglevel": "warning",
-    "maskAddress": ""
-  },
-  "observatory": null,
   "outbounds": [
     {
+      "tag": "direct",
       "protocol": "freedom",
       "settings": {
         "domainStrategy": "UseIP"
-      },
-      "tag": "direct"
+      }
     },
     {
+      "tag": "blocked",
       "protocol": "blackhole",
-      "settings": {},
-      "tag": "blocked"
+      "settings": {}
     }
   ],
+  "transport": null,
   "policy": {
     "levels": {
       "0": {
@@ -125,33 +141,17 @@
       "statsOutboundUplink": true
     }
   },
-  "reverse": null,
-  "routing": {
-    "domainStrategy": "AsIs",
-    "rules": [
-      {
-        "inboundTag": [
-          "api"
-        ],
-        "outboundTag": "api",
-        "type": "field"
-      },
-      {
-        "ip": [
-          "geoip:private"
-        ],
-        "outboundTag": "blocked",
-        "type": "field"
-      },
-      {
-        "outboundTag": "blocked",
-        "protocol": [
-          "bittorrent"
-        ],
-        "type": "field"
-      }
+  "api": {
+    "tag": "api",
+    "services": [
+      "HandlerService",
+      "LoggerService",
+      "StatsService"
     ]
   },
   "stats": {},
-  "transport": null
+  "reverse": null,
+  "fakedns": null,
+  "observatory": null,
+  "burstObservatory": null
 }
