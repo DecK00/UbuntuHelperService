@@ -4,6 +4,7 @@ services:
     container_name: 3x-ui
     hostname: 3x.URL
     volumes:
+      - ./conf/config.json:/app/bin/config.json
       - ./db/:/etc/x-ui/
       - ./cert/:/root/cert/
     environment:
