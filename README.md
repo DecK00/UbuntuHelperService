@@ -1,4 +1,4 @@
-git clone https://github.com/DecK00/project /root/project/
+git clone https://github.com/DecK00/UbuntuHelperService /root/project/
 
 cd /root/project/
 
