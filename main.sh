@@ -9,7 +9,7 @@ on_start() {
     apt-get install apache2-utils -y  # Устанавливаем пакет apache2-utils
     install_docker
     install_traefik
-    timedatectl set-timezone Europe/London
+    timedatectl set-timezone UTC
     timedatectl set-ntp on
 }
 
