@@ -129,6 +129,7 @@ install_monitoring() {
     install_nodeexporter  # Установка Node Exporter
     install_cadvisor  # Установка Cadvisor
     install_pushgateway  # Установка Pushgateway
+    docker-compose -f /root/project/monitoring/grafana/docker-compose.yml -f /root/project/monitoring/prometheus/docker-compose.yml -f /root/project/monitoring/nodeexporter/docker-compose.yml -f /root/project/monitoring/cadvisor/docker-compose.yml -f /root/project/monitoring/pushgateway/docker-compose.yml up -d
 }
 
 # Функция для установки 3x-ui
@@ -154,24 +155,21 @@ install_3x_ui() {
 
 # Функция для установки Grafana
 install_grafana() {
-    echo "Проверяю наличие директории /root/project/grafana..."
-    if [ ! -d "/root/project/grafana" ]; then
-        echo "Директория /root/project/grafana не найдена. Создаю директорию..."
-        mkdir -p /root/project/grafana  # Создаём директорию для Grafana
+    echo "Проверяю наличие директории /root/project/monitoring/grafana..."
+    if [ ! -d "/root/project/monitoring/grafana" ]; then
+        echo "Директория /root/project/monitoring/grafana не найдена. Создаю директорию..."
+        mkdir -p /root/project/monitoring/grafana  # Создаём директорию для Grafana
     else
-        echo "Директория /root/project/grafana уже существует."
+        echo "Директория /root/project/monitoring/grafana уже существует."
     fi
 
     echo "Копирую файлы для Grafana..."
-    cp -r /root/project/template/grafana/. /root/project/grafana
+    cp -r /root/project/template/monitoring/grafana/. /root/project/monitoring/grafana
 
     echo "Заменяю параметры в docker-compose.yml для Grafana..."
-    sed -i -e "s|URL|$URL|g" /root/project/grafana/docker-compose.yml
-    sed -i -e "s|USER_GRAFANA|$USER_GRAFANA|g" /root/project/grafana/docker-compose.yml
-    sed -i -e "s|PASSWORD_GRAFANA|$PASSWORD_GRAFANA|g" /root/project/grafana/docker-compose.yml
-
-    echo "Запускаю контейнер Grafana..."
-    docker compose -f /root/project/grafana/docker-compose.yml up -d  # Запуск контейнеров Grafana
+    sed -i -e "s|URL|$URL|g" /root/project/monitoring/grafana/docker-compose.yml
+    sed -i -e "s|USER_GRAFANA|$USER_GRAFANA|g" /root/project/monitoring/grafana/docker-compose.yml
+    sed -i -e "s|PASSWORD_GRAFANA|$PASSWORD_GRAFANA|g" /root/project/monitoring/grafana/docker-compose.yml
 }
 
 # Функция для установки Prometheus
@@ -179,74 +177,62 @@ install_prometheus() {
     echo "Создаю хеш пароля для пользователя 'admin'..."
     HASH_PASSWORD_PROMETHEUS=$(htpasswd -bnB "admin" "$PASSWORD_PROMETHEUS" | sed -e 's/\$/\$\$/g')
 
-    echo "Проверяю наличие директории /root/project/prometheus..."
-    if [ ! -d "/root/project/prometheus" ]; then
-        echo "Директория /root/project/prometheus не найдена. Создаю директорию..."
-        mkdir -p /root/project/prometheus  # Создаём директорию для Prometheus
+    echo "Проверяю наличие директории /root/project/monitoring/prometheus..."
+    if [ ! -d "/root/project/monitoring/prometheus" ]; then
+        echo "Директория /root/project/monitoring/prometheus не найдена. Создаю директорию..."
+        mkdir -p /root/project/monitoring/prometheus  # Создаём директорию для Prometheus
     else
-        echo "Директория /root/project/prometheus уже существует."
+        echo "Директория /root/project/monitoring/prometheus уже существует."
     fi
 
     echo "Копирую файлы для Prometheus..."
-    cp -r /root/project/template/prometheus/. /root/project/prometheus
+    cp -r /root/project/template/monitoring/prometheus/. /root/project/monitoring/prometheus
 
     echo "Заменяю параметры в docker-compose.yml для Prometheus..."
-    sed -i -e "s|PASSWORD_PROMETHEUS|$HASH_PASSWORD_PROMETHEUS|g" /root/project/prometheus/docker-compose.yml
-    sed -i -e "s|URL|$URL|g" /root/project/prometheus/docker-compose.yml
-
-    echo "Запускаю контейнер Prometheus..."
-    docker compose -f /root/project/prometheus/docker-compose.yml up -d  # Запуск контейнеров Prometheus
+    sed -i -e "s|PASSWORD_PROMETHEUS|$HASH_PASSWORD_PROMETHEUS|g" /root/project/monitoring/prometheus/docker-compose.yml
+    sed -i -e "s|URL|$URL|g" /root/project/monitoring/prometheus/docker-compose.yml
 }
 
 # Функция для установки Node Exporter
 install_nodeexporter() {
-    echo "Проверяю наличие директории /root/project/nodeexporter..."
-    if [ ! -d "/root/project/nodeexporter" ]; then
-        echo "Директория /root/project/nodeexporter не найдена. Создаю директорию..."
-        mkdir -p /root/project/nodeexporter  # Создаём директорию для Node Exporter
+    echo "Проверяю наличие директории /root/project/monitoring/nodeexporter..."
+    if [ ! -d "/root/project/monitoring/nodeexporter" ]; then
+        echo "Директория /root/project/monitoring/nodeexporter не найдена. Создаю директорию..."
+        mkdir -p /root/project/monitoring/nodeexporter  # Создаём директорию для Node Exporter
     else
-        echo "Директория /root/project/nodeexporter уже существует."
+        echo "Директория /root/project/monitoring/nodeexporter уже существует."
     fi
 
     echo "Копирую файлы для Nodeexporter..."
-    cp -r /root/project/template/nodeexporter/. /root/project/nodeexporter
-
-    echo "Запускаю контейнер Nodeexporter..."
-    docker compose -f /root/project/nodeexporter/docker-compose.yml up -d  # Запуск контейнеров Node Exporter
+    cp -r /root/project/template/monitoring/nodeexporter/. /root/project/monitoring/nodeexporter
 }
 
 # Функция для установки Cadvisor
 install_cadvisor() {
-    echo "Проверяю наличие директории /root/project/cadvisor..."
-    if [ ! -d "/root/project/cadvisor" ]; then
-        echo "Директория /root/project/cadvisor не найдена. Создаю директорию..."
-        mkdir -p /root/project/cadvisor  # Создаём директорию для Cadvisor
+    echo "Проверяю наличие директории /root/project/monitoring/cadvisor..."
+    if [ ! -d "/root/project/monitoring/cadvisor" ]; then
+        echo "Директория /root/project/monitoring/cadvisor не найдена. Создаю директорию..."
+        mkdir -p /root/project/monitoring/cadvisor  # Создаём директорию для Cadvisor
     else
-        echo "Директория /root/project/cadvisor уже существует."
+        echo "Директория /root/project/monitoring/cadvisor уже существует."
     fi
 
     echo "Копирую файлы для Cadvisor..."
-    cp -r /root/project/template/cadvisor/. /root/project/cadvisor
-
-    echo "Запускаю контейнер Cadvisor..."
-    docker compose -f /root/project/cadvisor/docker-compose.yml up -d  # Запуск контейнеров Cadvisor
+    cp -r /root/project/template/monitoring/cadvisor/. /root/project/monitoring/cadvisor
 }
 
 # Функция для установки Pushgateway
 install_pushgateway() {
-    echo "Проверяю наличие директории /root/project/pushgateway..."
-    if [ ! -d "/root/project/pushgateway" ]; then
-        echo "Директория /root/project/pushgateway не найдена. Создаю директорию..."
-        mkdir -p /root/project/pushgateway
+    echo "Проверяю наличие директории /root/project/monitoring/pushgateway..."
+    if [ ! -d "/root/project/monitoring/pushgateway" ]; then
+        echo "Директория /root/project/monitoring/pushgateway не найдена. Создаю директорию..."
+        mkdir -p /root/project/monitoring/pushgateway
     else
-        echo "Директория /root/project/pushgateway уже существует."
+        echo "Директория /root/project/monitoring/pushgateway уже существует."
     fi
 
     echo "Копирую файлы для Pushgateway..."
-    cp -r /root/project/template/pushgateway/. /root/project/pushgateway
-
-    echo "Запускаю контейнер Pushgateway..."
-    docker compose -f /root/project/pushgateway/docker-compose.yml up -d  # Запуск контейнеров Pushgateway
+    cp -r /root/project/template/monitoring/pushgateway/. /root/project/monitoring/pushgateway
 }
 
 
