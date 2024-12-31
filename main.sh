@@ -129,7 +129,7 @@ install_monitoring() {
     install_nodeexporter  # Установка Node Exporter
     install_cadvisor  # Установка Cadvisor
     install_pushgateway  # Установка Pushgateway
-    docker-compose -f /root/project/monitoring/grafana/docker-compose.yml -f /root/project/monitoring/prometheus/docker-compose.yml -f /root/project/monitoring/nodeexporter/docker-compose.yml -f /root/project/monitoring/cadvisor/docker-compose.yml -f /root/project/monitoring/pushgateway/docker-compose.yml up -d
+    COMPOSE_PROJECT_NAME=monitoring docker compose -f /root/project/monitoring/grafana/docker-compose.yml -f /root/project/monitoring/prometheus/docker-compose.yml -f /root/project/monitoring/nodeexporter/docker-compose.yml -f /root/project/monitoring/cadvisor/docker-compose.yml -f /root/project/monitoring/pushgateway/docker-compose.yml up -d
 }
 
 # Функция для установки 3x-ui
