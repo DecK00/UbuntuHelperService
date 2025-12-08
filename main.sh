@@ -21,14 +21,28 @@ update_system() {
 
 # Функция для установки Docker
 install_docker() {
-    echo "Загружаю скрипт установки Docker..."
-    curl -fsSL https://get.docker.com -o get-docker.sh  # Загружаем скрипт установки Docker
-    echo "Устанавливаю Docker..."
-    sh get-docker.sh  # Запускаем скрипт установки
-    echo "Удаляю скрипт установки Docker..."
-    rm get-docker.sh  # Удаляем временный скрипт установки
-    echo "Создаю сеть Docker с именем 'proxy'..."
-    docker network create proxy  # Создаём Docker-сеть
+    local DOCKER_VERSION="5:28.5.1-1~ubuntu.24.04~noble"
+
+    echo "Устанавливаем Docker версии $DOCKER_VERSION..."
+    sudo apt install -y docker-ce="$DOCKER_VERSION" \
+                        docker-ce-cli="$DOCKER_VERSION" \
+                        containerd.io \
+                        docker-buildx-plugin \
+                        docker-compose-plugin
+
+    echo "Удаляем старые или лишние пакеты, если есть..."
+    sudo apt autoremove -y
+
+    # Проверяем, существует ли сеть 'proxy'
+    if ! docker network inspect proxy >/dev/null 2>&1; then
+        echo "Создаём сеть Docker 'proxy'..."
+        docker network create proxy
+    else
+        echo "Сеть 'proxy' уже существует"
+    fi
+
+    echo "Docker версии $DOCKER_VERSION установлен. Проверяем версию:"
+    docker version
 }
 
 # Функция для установки Traefik
