@@ -16,11 +16,6 @@ on_start() {
 # Функция для обновления системы
 update_system() {
     echo "Обновление системы..."
-    apt-get update && apt-get upgrade -y  # Обновление списка пакетов и их установка
-}
-
-# Функция для установки Docker
-install_docker() {
     sudo apt update
     sudo apt install -y ca-certificates curl gnupg lsb-release
 
@@ -32,8 +27,11 @@ install_docker() {
     https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" \
     | sudo tee /etc/apt/sources.list.d/docker.list
 
-    sudo apt update
+    apt-get update && apt-get upgrade -y  # Обновление списка пакетов и их установка
+}
 
+# Функция для установки Docker
+install_docker() {
     local DOCKER_VERSION="5:28.5.1-1~ubuntu.24.04~noble"
 
     echo "Устанавливаем Docker версии $DOCKER_VERSION..."
