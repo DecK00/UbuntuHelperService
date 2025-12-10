@@ -12,6 +12,7 @@ services:
     networks:
       proxy:
     labels:
+      - "org.label-schema.group=monitoring"
       - "traefik.enable=true"
       - "traefik.http.routers.dockge.entrypoints=http"
       - "traefik.http.routers.dockge.rule=Host(`dockge.URL`)"

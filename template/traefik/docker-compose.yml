@@ -21,6 +21,7 @@ services:
       - ./config.yml:/config.yml:ro
       - ./logs:/var/log/traefik
     labels:
+      - "org.label-schema.group=monitoring"
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
       - "traefik.http.routers.traefik.rule=Host(`traefik.URL`)"
